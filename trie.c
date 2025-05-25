@@ -115,14 +115,19 @@ void delete(config_t *config, const int value) {
         if (*leftmostExternalChild != NULL) {
             int size = *trie == config->trie ? config->rootSize : config->nextSize;
             while ((*leftmostExternalChild)->next != NULL) {
+                bool found = false;
                 for (int i = 0; i < size; i++) {
                     if ((*leftmostExternalChild)->next[i] != NULL) {
                         leftmostExternalChild = &(*leftmostExternalChild)->next[i];
+                        found = true;
                         break;
                     }
                 }
-                free((*leftmostExternalChild)->next);
-                (*leftmostExternalChild)->next = NULL;
+                if (!found) {
+                    free((*leftmostExternalChild)->next);
+                    (*leftmostExternalChild)->next = NULL;
+                    break;
+                }
                 size = config->nextSize;
             }
         }
