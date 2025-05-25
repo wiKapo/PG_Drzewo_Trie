@@ -10,19 +10,23 @@ void init(trie_t **trie, const int value) {
     (*trie)->next = NULL;
 }
 
-void doPrint(const trie_t *trie, const int currSize, const int nextSize) {
+void doPrint(const trie_t *trie, const int size) {
     if (trie != NULL) {
         printf("%d ", trie->value);
-        if (trie->next != NULL) {
-            for (int i = 0; i < currSize; i++) {
-                doPrint(trie->next[i], nextSize, nextSize);
-            }
-        }
+        if (trie->next != NULL)
+            for (int i = 0; i < size; i++)
+                doPrint(trie->next[i], size);
     }
 }
 
 void print(const config_t config) {
-    doPrint(config.trie, config.rootSize, config.nextSize);
+    trie_t *trie = config.trie;
+    if (trie != NULL) {
+        printf("%d ", trie->value);
+        if (trie->next != NULL)
+            for (int i = 0; i < config.rootSize; i++)
+                doPrint(trie->next[i], config.nextSize);
+    }
 }
 
 void insert(config_t *config, const int value) {
@@ -56,13 +60,11 @@ trie_t **find(config_t *config, const int value) {
     int size = config->rootSize;
     int check = value;
     while (*trie != NULL) {
-        if ((*trie)->value == value) {
-            return trie;
-        }
+        if ((*trie)->value == value) return trie;
+
         const int id = check % size;
         check /= size;
-        if ((*trie)->next == NULL)
-            break;
+        if ((*trie)->next == NULL) break;
 
         trie = &(*trie)->next[id];
         size = config->nextSize;
@@ -72,6 +74,31 @@ trie_t **find(config_t *config, const int value) {
 
 void lookUp(config_t *config, const int value) {
     find(config, value) != NULL ? printf("%d exist\n", value) : printf("%d not exist\n", value);
+}
+
+void doFreeTrie(trie_t **trie, const int size) {
+    if (*trie != NULL) {
+        if ((*trie)->next != NULL) {
+            for (int i = 0; i < size; i++)
+                doFreeTrie(&(*trie)->next[i], size);
+            free((*trie)->next);
+        }
+        free(*trie);
+        *trie = NULL;
+    }
+}
+
+void freeTrie(config_t *config) {
+    trie_t **trie = &config->trie;
+    if (*trie != NULL) {
+        if ((*trie)->next != NULL) {
+            for (int i = 0; i < config->rootSize; i++)
+                doFreeTrie(&(*trie)->next[i], config->nextSize);
+            free((*trie)->next);
+        }
+        free(*trie);
+        *trie = NULL;
+    }
 }
 
 void delete(config_t *config, const int value) {
@@ -103,21 +130,4 @@ void delete(config_t *config, const int value) {
         free(*leftmostExternalChild);
         *leftmostExternalChild = NULL;
     }
-}
-
-void doFreeTrie(trie_t **trie, const int currSize, const int nextSize) {
-    if (*trie != NULL) {
-        if ((*trie)->next != NULL) {
-            for (int i = 0; i < currSize; i++) {
-                doFreeTrie(&(*trie)->next[i], nextSize, nextSize);
-            }
-            free((*trie)->next);
-        }
-        free(*trie);
-        *trie = NULL;
-    }
-}
-
-void freeTrie(config_t *config) {
-    doFreeTrie(&config->trie, config->rootSize, config->nextSize);
 }
