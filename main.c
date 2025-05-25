@@ -1,17 +1,16 @@
 #include <stdio.h>
 
-#include "structs.h"
 #include "trie.h"
 
 int main(void) {
     int n, min, max;
-    config_t config;
+    int rootSize, nextSize;
 
     scanf("%d", &n);
     scanf("%d %d", &min, &max);
-    scanf("%d %d", &config.rootSize, &config.nextSize);
+    scanf("%d %d", &rootSize, &nextSize);
 
-    config.trie = NULL;
+    trie_t *trie = NULL;
 
     char command;
     int value;
@@ -20,26 +19,26 @@ int main(void) {
             scanf("%c", &command);
         while (!(command == 'P' || command == 'I' || command == 'L' || command == 'D'));
         if (command == 'P') {
-            print(config);
+            print(trie, rootSize, nextSize);
             printf("\n");
             continue;
         }
         scanf("%d", &value);
         switch (command) {
             case 'I':
-                insert(&config, value);
+                insert(&trie, value, rootSize, nextSize);
                 break;
             case 'L':
-                lookUp(&config, value);
+                lookUp(&trie, value, rootSize, nextSize);
                 break;
             case 'D':
-                delete(&config, value);
+                delete(&trie, value, rootSize, nextSize);
                 break;
             default:
                 break;
         }
     }
 
-    freeTrie(&config);
+    freeTrie(&trie, rootSize, nextSize);
     return 0;
 }

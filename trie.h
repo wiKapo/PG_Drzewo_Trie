@@ -5,41 +5,23 @@
 #ifndef TRIE_H
 #define TRIE_H
 
-#include "structs.h"
+typedef struct trie {
+    int value;
+    struct trie **next;
+} trie_t;
 
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-void print(config_t config);
+void print(const trie_t *trie, const int rootSize, const int nextSize);
 
-void insert(config_t *config, const int value);
+void insert(trie_t **trie, const int value, const int rootSize, const int nextSize);
 
-void lookUp(config_t *config, const int value);
+void lookUp(trie_t **trie, const int value, const int rootSize, const int nextSize);
 
-void delete(config_t *config, const int value);
+void delete(trie_t **trie, const int value, const int rootSize, const int nextSize);
 
-void freeTrie(config_t *config);
+void freeTrie(trie_t **trie, const int rootSize, const int nextSize);
 
 #endif //TRIE_H
-/*
-29
-0 511
-8 4
-
-I 3
-I 31
-I 150
-I 190
-I 130
-I 174
-I 81
-I 30
-I 203
-P
-L 32
-L 30
-L 150
-Q
-
- */
