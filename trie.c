@@ -29,28 +29,24 @@ void print(const trie_t *trie, const int rootSize, const int nextSize) {
 }
 
 void insert(trie_t **trie, const int value, const int rootSize, const int nextSize) {
-    if (*trie == NULL) {
-        init(trie, value);
-    } else {
-        int size = rootSize;
-        int check = value;
+    int size = rootSize;
+    int check = value;
 
-        while (*trie != NULL) {
-            if ((*trie)->value == value) {
-                printf("%d exist\n", value);
-                return;
-            }
-            const int id = check % size;
-            check /= size;
-            if ((*trie)->next == NULL)
-                (*trie)->next = calloc(size, sizeof(trie_t));
-
-            trie = &(*trie)->next[id];
-            size = nextSize;
+    while (*trie != NULL) {
+        if ((*trie)->value == value) {
+            printf("%d exist\n", value);
+            return;
         }
+        const int id = check % size;
+        check /= size;
+        if ((*trie)->next == NULL)
+            (*trie)->next = calloc(size - 2, sizeof(trie_t));
 
-        init(trie, value);
+        trie = &(*trie)->next[id];
+        size = nextSize;
     }
+
+    init(trie, value);
 }
 
 trie_t **find(trie_t **trie, const int value, const int rootSize, const int nextSize) {
