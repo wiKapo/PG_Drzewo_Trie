@@ -40,7 +40,7 @@ void insert(trie_t **trie, const int value, const int rootSize, const int nextSi
         const int id = check % size;
         check /= size;
         if ((*trie)->next == NULL)
-            (*trie)->next = calloc(size - 2, sizeof(trie_t));
+            (*trie)->next = calloc(size, sizeof(trie_t*));
 
         trie = &(*trie)->next[id];
         size = nextSize;
