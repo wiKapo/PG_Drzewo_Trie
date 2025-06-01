@@ -18,21 +18,28 @@ int main(void) {
         do
             scanf("%c", &command);
         while (!(command == 'P' || command == 'I' || command == 'L' || command == 'D'));
-        if (command == 'P') {
-            print(trie, rootSize, nextSize);
-            printf("\n");
-            continue;
-        }
-        scanf("%d", &value);
+
         switch (command) {
+            case 'P':
+                print(trie, rootSize, nextSize);
+                printf("\n");
+                break;
             case 'I':
-                insert(&trie, value, rootSize, nextSize);
+                scanf("%d", &value);
+                if (!insert(&trie, value, rootSize, nextSize))
+                    printf("%d exist\n", value);
                 break;
             case 'L':
-                lookUp(&trie, value, rootSize, nextSize);
+                scanf("%d", &value);
+                if (lookUp(&trie, value, rootSize, nextSize))
+                    printf("%d exist\n", value);
+                else
+                    printf("%d not exist\n", value);
                 break;
             case 'D':
-                delete(&trie, value, rootSize, nextSize);
+                scanf("%d", &value);
+                if (!delete(&trie, value, rootSize, nextSize))
+                    printf("%d not exist\n", value);
                 break;
             default:
                 break;

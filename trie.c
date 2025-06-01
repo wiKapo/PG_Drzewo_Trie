@@ -28,25 +28,24 @@ void print(const trie_t *trie, const int rootSize, const int nextSize) {
     }
 }
 
-void insert(trie_t **trie, const int value, const int rootSize, const int nextSize) {
+bool insert(trie_t **trie, const int value, const int rootSize, const int nextSize) {
     int size = rootSize;
     int check = value;
 
     while (*trie != NULL) {
-        if ((*trie)->value == value) {
-            printf("%d exist\n", value);
-            return;
-        }
+        if ((*trie)->value == value) return false;
+
         const int id = check % size;
         check /= size;
         if ((*trie)->next == NULL)
-            (*trie)->next = calloc(size, sizeof(trie_t*));
+            (*trie)->next = calloc(size, sizeof(trie_t *));
 
         trie = &(*trie)->next[id];
         size = nextSize;
     }
 
     init(trie, value);
+    return true;
 }
 
 trie_t **find(trie_t **trie, const int value, const int rootSize, const int nextSize) {
@@ -65,8 +64,8 @@ trie_t **find(trie_t **trie, const int value, const int rootSize, const int next
     return NULL;
 }
 
-void lookUp(trie_t **trie, const int value, const int rootSize, const int nextSize) {
-    find(trie, value, rootSize, nextSize) != NULL ? printf("%d exist\n", value) : printf("%d not exist\n", value);
+bool lookUp(trie_t **trie, const int value, const int rootSize, const int nextSize) {
+    return find(trie, value, rootSize, nextSize) != NULL ? true : false;
 }
 
 void doFreeTrie(trie_t **trie, const int size) {
@@ -93,12 +92,10 @@ void freeTrie(trie_t **trie, const int rootSize, const int nextSize) {
     }
 }
 
-void delete(trie_t **trie, const int value, const int rootSize, const int nextSize) {
+bool delete(trie_t **trie, const int value, const int rootSize, const int nextSize) {
     trie_t **foundTrie = find(trie, value, rootSize, nextSize);
-    if (foundTrie == NULL) {
-        printf("%d not exist\n", value);
-        return;
-    }
+    if (foundTrie == NULL) return false;
+
     if ((*foundTrie)->next == NULL) {
         free(*foundTrie);
         *foundTrie = NULL;
@@ -127,4 +124,5 @@ void delete(trie_t **trie, const int value, const int rootSize, const int nextSi
         free(*leftmostExternalChild);
         *leftmostExternalChild = NULL;
     }
+    return true;
 }

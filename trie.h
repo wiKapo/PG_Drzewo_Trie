@@ -16,11 +16,11 @@ typedef struct trie {
 
 void print(const trie_t *trie, const int rootSize, const int nextSize);
 
-void insert(trie_t **trie, const int value, const int rootSize, const int nextSize);
+bool insert(trie_t **trie, const int value, const int rootSize, const int nextSize);
 
-void lookUp(trie_t **trie, const int value, const int rootSize, const int nextSize);
+bool lookUp(trie_t **trie, const int value, const int rootSize, const int nextSize);
 
-void delete(trie_t **trie, const int value, const int rootSize, const int nextSize);
+bool delete(trie_t **trie, const int value, const int rootSize, const int nextSize);
 
 void freeTrie(trie_t **trie, const int rootSize, const int nextSize);
 
